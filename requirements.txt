@@ -1,7 +1,7 @@
 https://download.pytorch.org/whl/cpu/torchvision-0.7.0%2Bcpu-cp36-cp36m-linux_x86_64.whl
 https://download.pytorch.org/whl/cpu/torch-1.6.0%2Bcpu-cp36-cp36m-linux_x86_64.whl
 
-
+gunicorn
 attrs==19.3.0
 beautifulsoup4==4.9.1
 bleach==3.1.5
