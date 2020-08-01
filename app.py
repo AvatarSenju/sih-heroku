@@ -102,6 +102,19 @@ def predict(img, n: int = 3) -> Dict[str, Union[str, List]]:
     return {"predictions": x[pred_idx]}
 
 
+@app.route('/api/getSpot', methods=['GET'])
+def getSpot():
+    return send_file('spot.jpg', mimetype='image/gif')
+
+@app.route('/api/getNoSpot', methods=['GET'])
+def getNoSpot():
+    return send_file('no_spots.jpg', mimetype='image/gif')
+
+@app.route('/api/getGray', methods=['GET'])
+def getGray():
+    return send_file('gray.jpg', mimetype='image/gif')
+
+
 @app.route('/api/classify', methods=['POST', 'GET'])
 def upload_file():
     if request.method == 'POST':
