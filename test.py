@@ -28,11 +28,29 @@ x=['Apple___Apple_scab',
  'Potato___Late_blight',
  'Potato___healthy']
 
-
-model_name='export1.pkl'
+print("model export2")
+model_name='export2.pkl'
 model_dir=os.getcwd()+ "/models"
 
 learn = load_learner(model_dir,model_name)
-img=open_image('appleext.jpg')
-pred,pred_idx,probs = learn.predict(img)
-print(x[pred_idx])
+
+y=os.listdir('./test')
+# print(y)
+for fname in y:
+    img=open_image(os.path.join('./test/',fname))
+    pred,pred_idx,probs = learn.predict(img)
+    print(fname,"\t\t\t",x[pred_idx])
+
+
+print("\nmodel export (1-1)")
+model_name='export1-1.pkl'
+model_dir=os.getcwd()+ "/models"
+
+learn = load_learner(model_dir,model_name)
+
+y=os.listdir('./test')
+# print(y)
+for fname in y:
+    img=open_image(os.path.join('./test/',fname))
+    pred,pred_idx,probs = learn.predict(img)
+    print(fname,"\t\t\t",x[pred_idx])

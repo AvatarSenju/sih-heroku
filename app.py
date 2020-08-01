@@ -23,6 +23,9 @@ from fastai.metrics import error_rate,accuracy,fbeta
 from io import BytesIO
 from typing import List, Dict, Union, ByteString, Any
 import requests
+from thresh import marked
+from PIL import Image
+import base64
 
 BATCH_SIZE = 64
 
@@ -39,7 +42,7 @@ x=['Apple___Apple_scab',
  'Potato___healthy']
 
 
-model_name='export1.pkl'
+model_name='export.pkl'
 model_dir=os.getcwd()+ "/models"
 
 learn = load_learner(model_dir,model_name)
@@ -48,6 +51,31 @@ learn = load_learner(model_dir,model_name)
 # print(x[pred_idx])
 
 
+# def image2np(image:Tensor)->np.ndarray:
+#     "Convert from torch style `image` to numpy/matplotlib style."
+#     res = image.cpu().permute(1,2,0).numpy()
+#     return res[...,0] if res.shape[2]==1 else res
+
+def encode_img():
+    images=[]
+    image = open('spot.jpg', 'rb')
+    image_read = image.read()
+    image_64_encode = base64.encodestring(image_read).decode('utf-8')
+    images.append(image_64_encode)
+
+    image = open('no_spots.jpg', 'rb')
+    image_read = image.read()
+    image_64_encode = base64.encodestring(image_read).decode('utf-8')
+    images.append(image_64_encode)
+
+
+    image = open('gray.jpg', 'rb')
+    image_read = image.read()
+    image_64_encode = base64.encodestring(image_read).decode('utf-8')
+    images.append(image_64_encode)
+
+
+    return images
 
 def load_model(path="../", model_name="export1.pkl"):
     learn = load_learner(path, fname=model_name)
@@ -67,7 +95,10 @@ def load_image_bytes(raw_bytes: ByteString) -> Image:
 
 def predict(img, n: int = 3) -> Dict[str, Union[str, List]]:
     pred,pred_idx,probs = learn.predict(img)
+    # print(type(img))
+    # numim=image2np(img)
 
+    # marked(numim)
     return {"predictions": x[pred_idx]}
 
 
@@ -76,8 +107,11 @@ def upload_file():
     if request.method == 'POST':
         bytes = request.files['file'].read()
         img = load_image_bytes(bytes)
-    
-        res = predict(img)
+        image = Image.open(io.BytesIO(bytes))
+        image.save("to_mark.jpg")
+        marked()
+        images=encode_img()
+        res = [predict(img),images]
     else:
         return send_file('wah.jpeg', mimetype='image/gif')
     return jsonify(res)
