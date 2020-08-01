@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,request
+from flask import Flask,jsonify,request,send_file
 
 app = Flask(__name__)
 
@@ -79,8 +79,9 @@ def upload_file():
     
         res = predict(img)
     else:
-        res="None"
+        return send_file('wah.jpeg', mimetype='image/gif')
     return jsonify(res)
+    
 
 @app.route('/')
 def index():
